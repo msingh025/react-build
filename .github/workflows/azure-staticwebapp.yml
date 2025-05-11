@@ -37,9 +37,7 @@ jobs:
     steps:
       - uses: actions/checkout@v4
         with:
-          submodules: true
-      - name: Extract some files
-        run: 7z x build.zip  
+          submodules: true 
       - name: List files
         run: |
           echo "Files in the repository:"
