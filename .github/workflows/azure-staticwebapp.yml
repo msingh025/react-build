@@ -16,7 +16,7 @@ on:
   push:
     branches: [ "dev" ]
     paths:
-      - "build/**"  # Only trigger on changes to the build directory
+      - "/"  # Only trigger on changes to the build directory
       - ".github/workflows/azure-staticwebapp.yml" # Only trigger on changes to this workflow file
 
 # Environment variables available to all jobs and steps in this workflow
