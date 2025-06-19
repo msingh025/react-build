@@ -80,3 +80,15 @@ jobs:
         with:
           azure_static_web_apps_api_token: ${{ env.AZURE_STATIC_WEB_APPS_API_TOKEN }} # secret containing api token for app
           action: "close"
+      - name:  Wait for 30 seconds
+        run: sleep 30
+      - name:  verify http status
+        run: |
+          echo "Verifying the HTTP status of the static web app"
+          curl -I https://www.pkchai.com | grep HTTP
+          if [ $? -ne 0 ]; then
+            echo "Failed to verify HTTP status"
+            exit 1
+          else
+            echo "HTTP status verified successfully"
+          fi
