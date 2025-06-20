@@ -1,0 +1,58 @@
+name: Deploy Custom Domain with Managed Cert
+
+on:
+  workflow_dispatch:  # Manually trigger
+  push:
+    branches: [ main ]
+
+jobs:
+  add_custom_domain:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+        
+      - name: Azure Login
+        uses: azure/login@v1
+        with:
+          creds: ${{ secrets.AZURE_CREDENTIALS }}
+
+      - name: Add Custom Domain
+        run: |
+          az webapp config hostname add --webapp-name pkchaipoc001 --resource-group pocdotnetapp --hostname api.pkchai.com
+
+  create_managed_cert:
+    runs-on: ubuntu-latest
+    needs: add_custom_domain  # Depends on domain creation
+    steps:
+      - name: Azure Login
+        uses: azure/login@v1
+        with:
+          creds: ${{ secrets.AZURE_CREDENTIALS }}
+          
+      - name: Create Managed Certificate
+        run: |
+          az webapp config ssl create --resource-group pocdotnetapp --name pkchaipoc001 --hostname api.pkchai.com --validation-method DNS
+
+  bind_ssl_certificate:
+    runs-on: ubuntu-latest
+    needs: create_managed_cert
+    steps:
+      - name: Azure Login
+        uses: azure/login@v1
+        with:
+          creds: ${{ secrets.AZURE_CREDENTIALS }}
+          
+      - name: Bind SSL Certificate
+        run: |
+          # Fetch certificate thumbprint
+          THUMBPRINT=$(az webapp config ssl show --resource-group pocdotnetapp --certificate-name api.pkchai.com --query thumbprint --output tsv)
+          
+          # Bind to domain
+          az webapp config ssl bind --resource-group pocdotnetapp --name pkchaipoc001 --certificate-thumbprint "" --ssl-type SNI --hostname api.pkchai.com
+
+          A71BCEDBB59504457AB841FB681D655AA70CD0AA
+          # Output the thumbprint for verification
+          echo "SSL Certificate Thumbprint: $THUMBPRINT"
+
+          az webapp config ssl show --resource-group pocdotnetapp --certificate-name api.pkchai.com --query thumbprint --output tsv
