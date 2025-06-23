@@ -80,6 +80,11 @@ jobs:
       - name:  verify http status
         run: |
           echo "Verifying the HTTP status of the static web app"
+          echo "github.owner: ${{ github.repository_owner }}"
+          echo "github.repo: ${{ github.repository }}"
+          echo "github.event_name: ${{ github.event_name }}"
+          echo "github.event.action: ${{ github.event.action }}"
+          echo "Verifying the HTTP status of the static web app"
           curl -I https://www.pkchai.com | grep HTTP
           if [ $? -ne 0 ]; then
             echo "Failed to verify HTTP status"
@@ -102,18 +107,4 @@ jobs:
           action: "close"
       - name:  Wait for 30 seconds
         run: sleep 30
-      - name:  verify http status
-        run: |
-          echo "Verifying the HTTP status of the static web app"
-          echo "github.owner: ${{ github.repository_owner }}"
-          echo "github.repo: ${{ github.repository }}"
-          echo "github.event_name: ${{ github.event_name }}"
-          echo "github.event.action: ${{ github.event.action }}"
-          
-          curl -I https://www.pkchai.com | grep HTTP
-          if [ $? -ne 0 ]; then
-            echo "Failed to verify HTTP status"
-            exit 1
-          else
-            echo "HTTP status verified successfully"
-          fi
+      
