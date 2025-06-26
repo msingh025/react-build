@@ -90,7 +90,7 @@ jobs:
             echo "Failed to verify HTTP status"
             exit 1
           else
-            echo "HTTP status verified successfully"
+            echo "HTTP status verified successfully" 
           fi
   close_pull_request_job:
     permissions:
@@ -107,4 +107,5 @@ jobs:
           action: "close"
       - name:  Wait for 30 seconds
         run: sleep 30
+      
       
