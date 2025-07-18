@@ -53,9 +53,14 @@ jobs:
           echo "Files in the repository:"
           ls -R
       - name: Start ClamAV Daemon
-        uses: crazy-max/ghaction-clamav@v2
+        uses: crazy-max/ghaction-clamav@v1
+        with:
+          clamav_version: "0.103.2" # Specify the version of ClamAV to use
+          clamav_update: true # Update the virus database before scanning
+          clamav_options: "--log /tmp/clamav.log" # Optional: specify additional options for ClamAV
+    
       - name: Malware Scanner
-        uses: internxt/scan@main
+        uses: internxt/scanner-action@v1
         with:
               directories: .
               options: -ri
