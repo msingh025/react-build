@@ -53,7 +53,7 @@ jobs:
           echo "Files in the repository:"
           ls -R
       - name: Start ClamAV Daemon
-        uses: github-actions/clamav-daemon@v1
+        uses: crazy-max/ghaction-clamav@v1
       - name: Malware Scanner
         uses: internxt/scan@v1
         with:
